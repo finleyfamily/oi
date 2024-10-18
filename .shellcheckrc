@@ -1,0 +1,6 @@
+# https://github.com/koalaman/shellcheck/wiki/Ignore
+# SC1090: Can't follow non-constant source. Use a directive to specify location.
+# SC2162: not valid for zsh
+disable=SC1090,SC2162
+external-sources=true
+source-path=SCRIPTDIR

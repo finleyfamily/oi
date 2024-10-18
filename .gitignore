@@ -1,5 +1,6 @@
 *.DS_Store
 .envrc
 .venv/
+dist/
 node_modules/
 tmp/

@@ -1,0 +1,24 @@
+name: Release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    uses: $GITHUB_REPOSITORY/.github/workflows/build.yml@master
+  publish-release:
+    name: 🚀 Publish 📦 To Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Download distribution artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: ⤴️ Upload release assets
+        run: |
+          cd dist;
+          find . -type f -prune -exec gh release upload ${{ github.event.release.tag_name }} '{}' +

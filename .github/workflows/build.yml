@@ -16,11 +16,13 @@ jobs:
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v4
       - name: Install zsh
-        run: sudo apt-get update -y && sudo apt-get install -y zsh
+        run: sudo apt-get install -y zsh
       - name: 🚀 Build
         env:
           VERSION: ${{ inputs.version }}
-        run: ./build.sh ${VERSION:-"$(./src/oi --version)-dev+${GITHUB_SHA}"}
+        run: |
+          source ./src/version.sh
+          ./build.sh ${VERSION:-"${OI_VERSION}-dev+${GITHUB_SHA}"}
       - name: ⤴️ Upload distribution artifact
         uses: actions/upload-artifact@v4
         with:

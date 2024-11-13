@@ -16,7 +16,7 @@ jobs:
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v4
       - name: Install zsh
-        run: apt-get update -y && apt-get install -y zsh
+        run: sudo apt-get update -y && sudo apt-get install -y zsh
       - name: 🚀 Build
         env:
           VERSION: ${{ inputs.version }}

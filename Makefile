@@ -50,4 +50,4 @@ spellcheck: ## run cspell
 		--show-context
 
 test: ## run all test
-	@echo "no tests configured for this project"
+	@act --job test

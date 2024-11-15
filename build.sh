@@ -31,6 +31,7 @@ function build::prep {
   mkdir -p "${TMP_DIR}";
 
   cp -a "${PWD}/src/." "${TMP_DIR}";
+  cp -a "${PWD}/LICENSE" "${TMP_DIR}/LICENSE";
 }
 
 function build::set-version {
@@ -110,5 +111,6 @@ build::prep;
 build::set-version "${VERSION}";
 build::tar "${FILE_NAME}";
 build::zip "${FILE_NAME}";
+build::cleanup;
 
 oi::log.success "build completed! distribution artifacts can be found in ${OUT_DIR}"

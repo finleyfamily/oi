@@ -37,6 +37,6 @@ jobs:
       - name: 🏗 Install oi
         run: |
           mkdir -p "${HOME}/.local/bin";
-          ln "${PWD}/src/oi" "${HOME}/.local/bin";
+          ln -s "${PWD}/src/oi" "${HOME}/.local/bin";
       - name: 🚀 Run Tests
         run: /tmp/lib/bashunit tests

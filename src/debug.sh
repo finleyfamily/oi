@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 # ==============================================================================
 
-oi::debug() {
+function oi::debug {
   #
   # Checks if we are currently running in debug mode, based on the log module.
   #

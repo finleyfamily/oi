@@ -12,8 +12,13 @@ set -o pipefail; # Return exit status of the last command in the pipe that faile
 # ==============================================================================
 
 # Stores the location of this library
-# shellcheck disable=SC2296
-__OI_BIN="$(readlink -f "${(%):-%x}")";
+__OI_BIN="${BASH_SOURCE[0]:-}"
+if [[ "$__OI_BIN" == "" ]]; then
+  # shellcheck disable=SC2296
+  __OI_BIN="$(readlink -f "${(%):-%x}")";
+else
+  __OI_BIN="$(readlink -f "${__OI_BIN}")"
+fi
 __OI_LIB_DIR=$(dirname "${__OI_BIN}");
 
 # shellcheck source=version.sh

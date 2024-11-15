@@ -80,18 +80,34 @@ readonly __OI_LOG_LEVEL_NOTICE=4;
 readonly __OI_LOG_LEVEL_OFF=0;
 readonly __OI_LOG_LEVEL_TRACE=7;
 readonly __OI_LOG_LEVEL_WARNING=3;
-# shellcheck disable=SC2004
-readonly -A __OI_LOG_LEVELS=(
-  [${__OI_LOG_LEVEL_OFF}]="OFF"
-  [${__OI_LOG_LEVEL_FATAL}]="FATAL"
-  [${__OI_LOG_LEVEL_ERROR}]="ERROR"
-  [${__OI_LOG_LEVEL_WARNING}]="WARNING"
-  [${__OI_LOG_LEVEL_NOTICE}]="NOTICE"
-  [${__OI_LOG_LEVEL_INFO}]="INFO"
-  [${__OI_LOG_LEVEL_DEBUG}]="DEBUG"
-  [${__OI_LOG_LEVEL_TRACE}]="TRACE"
-  [${__OI_LOG_LEVEL_ALL}]="ALL"
-)
+
+if [[ "${BASH:-}" ]]; then
+  # shellcheck disable=SC2004
+  readonly -a __OI_LOG_LEVELS=(
+    [${__OI_LOG_LEVEL_OFF}]="OFF"
+    [${__OI_LOG_LEVEL_FATAL}]="FATAL"
+    [${__OI_LOG_LEVEL_ERROR}]="ERROR"
+    [${__OI_LOG_LEVEL_WARNING}]="WARNING"
+    [${__OI_LOG_LEVEL_NOTICE}]="NOTICE"
+    [${__OI_LOG_LEVEL_INFO}]="INFO"
+    [${__OI_LOG_LEVEL_DEBUG}]="DEBUG"
+    [${__OI_LOG_LEVEL_TRACE}]="TRACE"
+    [${__OI_LOG_LEVEL_ALL}]="ALL"
+  )
+else
+  # shellcheck disable=SC2004
+  readonly -A __OI_LOG_LEVELS=(
+    [${__OI_LOG_LEVEL_OFF}]="OFF"
+    [${__OI_LOG_LEVEL_FATAL}]="FATAL"
+    [${__OI_LOG_LEVEL_ERROR}]="ERROR"
+    [${__OI_LOG_LEVEL_WARNING}]="WARNING"
+    [${__OI_LOG_LEVEL_NOTICE}]="NOTICE"
+    [${__OI_LOG_LEVEL_INFO}]="INFO"
+    [${__OI_LOG_LEVEL_DEBUG}]="DEBUG"
+    [${__OI_LOG_LEVEL_TRACE}]="TRACE"
+    [${__OI_LOG_LEVEL_ALL}]="ALL"
+  )
+fi
 
 # Log format
 readonly __OI_DEFAULT_LOG_FORMAT="${__OI_COLORS_DIM_CYAN}[{TIMESTAMP}]${__OI_COLORS_RESET} ${__OI_COLORS_ESCAPE}1m{LEVEL}:${__OI_COLORS_RESET} {MESSAGE}";

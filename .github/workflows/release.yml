@@ -11,6 +11,8 @@ jobs:
   publish-release:
     name: 🚀 Publish 📦 To Release
     needs: build
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Download distribution artifact
@@ -19,6 +21,8 @@ jobs:
           name: dist
           path: dist
       - name: ⤴️ Upload release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           cd dist;
           find . -type f -prune -exec gh release upload ${{ github.event.release.tag_name }} '{}' +

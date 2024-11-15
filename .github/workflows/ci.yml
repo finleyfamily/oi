@@ -34,5 +34,9 @@ jobs:
           curl -s https://bashunit.typeddevs.com/install.sh > /tmp/install-bashunit.sh
           chmod +x /tmp/install-bashunit.sh
           /tmp/install-bashunit.sh
+      - name: 🏗 Install oi
+        run: |
+          mkdir -p "${HOME}/.local/bin";
+          ln "${PWD}/src/oi" "${HOME}/.local/bin";
       - name: 🚀 Run Tests
         run: /tmp/lib/bashunit tests

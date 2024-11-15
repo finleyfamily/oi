@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    uses: $GITHUB_REPOSITORY/.github/workflows/build.yml@master
+    uses: ./.github/workflows/build.yml
   publish-release:
     name: 🚀 Publish 📦 To Release
     needs: build

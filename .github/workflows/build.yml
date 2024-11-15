@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  pull_request:  # any pull request
+  workflow_call:
+    inputs:
+      version:
+        description: Version of the package that will be built.
+        required: false
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v4
+      - name: Install zsh
+        run: sudo apt-get install -y zsh
+      - name: 🚀 Build
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          source ./src/version.sh
+          ./build.sh ${VERSION:-"${OI_VERSION}-dev+${GITHUB_SHA}"}
+      - name: ⤴️ Upload distribution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist

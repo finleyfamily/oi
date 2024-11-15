@@ -7,5 +7,36 @@ on:
       - master
 
 jobs:
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v4
+      - name: Run shellcheck
+        uses: ludeeus/action-shellcheck@master  # cspell:words ludeeus
+        with:
+          scandir: ./src
   spellcheck:
     uses: finleyfamily/workflows/.github/workflows/spellcheck.yml@master
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v4
+      - name: 🏗 Update apt
+        if: env.ACT == 'true'
+        run: sudo apt-get update -y
+      - name: 🏗 Install zsh & bashunit
+        run: |
+          sudo apt-get install -y zsh
+          curl -s https://bashunit.typeddevs.com/install.sh > /tmp/install-bashunit.sh
+          chmod +x /tmp/install-bashunit.sh
+          /tmp/install-bashunit.sh
+      - name: 🏗 Install oi
+        run: |
+          mkdir -p "${HOME}/.local/bin";
+          ln -s "${PWD}/src/oi" "${HOME}/.local/bin";
+      - name: 🚀 Run Tests
+        run: /tmp/lib/bashunit tests

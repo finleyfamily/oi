@@ -18,7 +18,7 @@ function build::cleanup {
   #
   # Cleanup temporary files after a build has completed.
   #
-  m -rf "$(dirname "${TMP_DIR}")";
+  rm -rf "$(dirname "${TMP_DIR}")";
 }
 
 function build::prep {
@@ -111,6 +111,6 @@ build::prep;
 build::set-version "${VERSION}";
 build::tar "${FILE_NAME}";
 build::zip "${FILE_NAME}";
-build::cleanup;
+build::cleanup
 
 oi::log.success "build completed! distribution artifacts can be found in ${OUT_DIR}"

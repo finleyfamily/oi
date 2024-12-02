@@ -259,7 +259,7 @@ class Installer:
         return rv
 
     @cached_property
-    def current_version(self) -> str | None:
+    def current_version(self) -> tuple[str, str, str, str, str, str, str, str] | None:
         """Currently installed version."""
         if self.version_file.exists():
             version_match = self.VERSION_REGEX.findall(self.version_file.read_text())
@@ -402,7 +402,9 @@ class Installer:
 
         return asset
 
-    def get_version(self) -> tuple[str | None, str | None]:
+    def get_version(
+        self,
+    ) -> tuple[str | None, tuple[str, str, str, str, str, str, str, str] | None]:
         """Get version to install."""
         self.write_stdout(colorize("info", "retrieving releases..."))
 
@@ -485,7 +487,8 @@ class Installer:
 
     def uninstall(self) -> int:
         """Uninstall oi."""
-        if not self.lib_dir.exists():
+        lib_dir = self.lib_dir / "oi"
+        if not lib_dir.exists():
             self.write_stdout(
                 "{} is not currently installed.".format(colorize("info", "oi"))
             )
@@ -494,14 +497,19 @@ class Installer:
         if self.current_version:
             self.write_stdout(
                 "Removing {} ({})".format(
-                    colorize("info", "oi"), colorize("b", self.current_version)
+                    colorize("info", "oi"),
+                    colorize(
+                        "b",
+                        ".".join(self.current_version[:3]) + self.current_version[4],
+                    ),
                 )
             )
         else:
             self.write_stdout("Removing {}".format(colorize("info", "oi")))
 
         (self.bin_dir / "oi").unlink(missing_ok=True)
-        shutil.rmtree(self.lib_dir / "oi")
+        if lib_dir.exists():
+            shutil.rmtree(lib_dir)
         return 0
 
     def write_stdout(self, line: str) -> None:

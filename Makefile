@@ -22,15 +22,13 @@ fix-ruff: ## automatically fix everything ruff can fix (implies fix-imports)
 fix-md: ## automatically fix markdown format errors
 	@poetry run pre-commit run mdformat --all-files
 
-lint: lint-shellcheck ## run all linters
-
 lint: lint-ruff lint-pyright ## run all linters
-	@if [ $${CI} ]; then \
-		echo ""; \
-		echo "skipped linters that have dedicated jobs"; \
-	else \
+	@if [[ "${CI}" == "yes" ]]; then \
 		echo ""; \
 		$(MAKE) --no-print-directory lint-shellcheck; \
+	else \
+		echo ""; \
+		echo "skipped linters that have dedicated jobs"; \
 	fi
 
 lint-pyright: ## run pyright

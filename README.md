@@ -44,6 +44,22 @@ To uninstall OI, pass the `--uninstall` flag to the script.
 curl -sSL https://raw.githubusercontent.com/finleyfamily/oi/refs/heads/master/install.py | python3 - --uninstall
 ```
 
+### Adding OI to your PATH
+
+The install script creates an `oi` symlink in a well-known, platform-specific directory:
+
+- `$HOME/.local/bin` on Linux/Unix/macOS
+
+If this directory is not present in your `PATH`, it should be added.
+
+Alternatively, the full path to the OI script can always be used:
+
+- `~/.local/lib/oi/oi` on Linux/Unix/macOS
+
+### Updating
+
+To update OI, simply follow the steps in [Installation](#installation) section again.
+
 ## Usage
 
 Configuring a zsh script to use the OI library is fairly easy. Simply replace the shebang of your script with from `zsh` to `oi`.

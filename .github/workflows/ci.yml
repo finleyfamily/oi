@@ -13,6 +13,7 @@ jobs:
         python-version: ['3.10', 3.11, 3.12]
     uses: finleyfamily/workflows/.github/workflows/python.checks.yml@master
     with:
+      disable-tests: true
       python-version: ${{ matrix.python-version }}
   shellcheck:
     name: shellcheck

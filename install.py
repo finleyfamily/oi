@@ -527,7 +527,8 @@ class ReleaseArtifact(TypedDict):
 def main() -> int:
     """Entrypoint of this script."""
     parser = argparse.ArgumentParser(
-        description="Installs the latest (or given) version of oi"
+        add_help=False,
+        description="Installs the latest (or given) version of oi.",
     )
     parser.add_argument(
         "-a",

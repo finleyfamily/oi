@@ -336,10 +336,6 @@ class Installer:
             )
         )
 
-    def write_stdout(self, line: str) -> None:
-        """Log to stdout."""
-        sys.stdout.write(line + "\n")
-
     def display_post_message(self, version: str) -> None:
         """Display post-install message."""
         paths = os.getenv("PATH", "").split(":")
@@ -482,10 +478,35 @@ class Installer:
         bin_file = self.bin_dir / "oi"
         if bin_file.exists():
             bin_file.unlink()
-        bin_file.symlink_to(self.lib_dir / "oi")
+        bin_file.symlink_to(self.lib_dir / "oi" / "oi")
         self._install_comment(version, "Complete")
         self.display_post_message(version)
         return 0
+
+    def uninstall(self) -> int:
+        """Uninstall oi."""
+        if not self.lib_dir.exists():
+            self.write_stdout(
+                "{} is not currently installed.".format(colorize("info", "oi"))
+            )
+            return 1
+
+        if self.current_version:
+            self.write_stdout(
+                "Removing {} ({})".format(
+                    colorize("info", "oi"), colorize("b", self.current_version)
+                )
+            )
+        else:
+            self.write_stdout("Removing {}".format(colorize("info", "oi")))
+
+        (self.bin_dir / "oi").unlink(missing_ok=True)
+        shutil.rmtree(self.lib_dir / "oi")
+        return 0
+
+    def write_stdout(self, line: str) -> None:
+        """Log to stdout."""
+        sys.stdout.write(line + "\n")
 
 
 class ReleaseArtifact(TypedDict):
@@ -549,16 +570,9 @@ def main() -> int:
         version=args.version, allow_prereleases=args.allow_prereleases, force=args.force
     )
 
-    if args.uninstall:
-        installer.write_stdout(
-            colorize(
-                "red",
-                "Uninstall is not currently supported. It will be added in the future.",
-            )
-        )
-        return 1
-
     try:
+        if args.uninstall:
+            return installer.uninstall()
         return installer.install(args.artifact_type)
     except Exception as err:  # noqa: BLE001
         import traceback

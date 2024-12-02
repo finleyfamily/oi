@@ -25,10 +25,10 @@ fix-md: ## automatically fix markdown format errors
 lint: lint-ruff lint-pyright ## run all linters
 	@if [[ "${CI}" == "yes" ]]; then \
 		echo ""; \
-		$(MAKE) --no-print-directory lint-shellcheck; \
+		echo "skipped linters that have dedicated jobs"; \
 	else \
 		echo ""; \
-		echo "skipped linters that have dedicated jobs"; \
+		$(MAKE) --no-print-directory lint-shellcheck; \
 	fi
 
 lint-pyright: ## run pyright

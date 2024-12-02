@@ -2,7 +2,8 @@
   "description": "Version management for npm tools.",
   "devDependencies": {
     "@itprokyle/cspell-dict": "^1.2.7",
-    "cspell": "^8.16.1"
+    "cspell": "^8.16.1",
+    "pyright": "^1.1.389"
   },
   "name": "oi",
   "version": "0.0.0"

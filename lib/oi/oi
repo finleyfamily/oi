@@ -1,0 +1,40 @@
+#! /usr/bin/env zsh
+# shellcheck shell=bash
+# ==============================================================================
+# OI is a zsh function library inspired by https://github.com/hassio-addons/bashio.
+# ==============================================================================
+set -o errexit;  # Exit script when a command exits with non-zero status
+# set -o errtrace; # Exit on error inside any functions or sub-shells
+set -o nounset;  # Exit script on use of an undefined variable
+set -o pipefail; # Return exit status of the last command in the pipe that failed
+# ==============================================================================
+
+export __OI_BIN;
+export __OI_LIB_DIR;
+
+# shellcheck disable=SC2296
+__OI_BIN="$(readlink -f "${(%):-%x}")";
+__OI_LIB_DIR=$(dirname "${__OI_BIN}");
+
+# Include OI library
+# shellcheck source=oi.sh
+source "${__OI_LIB_DIR}/oi.sh";
+
+case $1 in
+  --help | -h)
+    oi::_help "$1 option was provided";
+    oi::exit.ok "exited early after printing help message";
+    ;;
+  --version)
+    oi::log.info "OI library version ${OI_VERSION}";
+    oi::exit.ok "exited early after printing version";
+    ;;
+  *) ;;
+esac
+
+# Execute source
+# shellcheck disable=SC2086,SC2277
+0=${1:?script to source must be provided};
+shift;
+# shellcheck source=/dev/null
+source "$0" "$@";

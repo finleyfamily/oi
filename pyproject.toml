@@ -2,10 +2,82 @@
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.1"
+
+[tool.poetry.group.lint.dependencies]
+ruff = "^0.8.1"
+
+[tool.pyright]
+exclude = [
+  "**/.eggs",
+  "**/.git",
+  "**/.venv",
+  "**/__pycache__",
+  "**/docs",
+  "**/node_modules",
+  "**/typings",
+]
+pythonPlatform = "All"
+pythonVersion = "3.10"
+reportDuplicateImport = "none"
+reportImportCycles = "none"
+reportIncompatibleMethodOverride = "warning"
+reportMissingTypeStubs = "none"
+reportPrivateUsage = "none"
+reportUnknownMemberType = "none"
+reportUnnecessaryIsInstance = "warning"
+reportUnnecessaryTypeIgnoreComment = "warning"
+reportUnusedImport = "none"
+reportUnusedVariable = "none"
+strictParameterNoneValue = false
+typeCheckingMode = "strict"
+useLibraryCodeForTypes = true
+venv = ".venv"
+
+[tool.ruff]  # https://docs.astral.sh/ruff/settings/#top-level
+force-exclude = true
+line-length = 120
+show-fixes = true
+target-version = "py310"
+
+[tool.ruff.lint]  # https://docs.astral.sh/ruff/settings/#lint
+ignore = [
+  "COM812",  # Trailing comma missing
+  "D203",  # 1 blank line required before class docstring
+  "D213",  # Multi-line docstring summary should start at the second line
+  "D215",  # Section underline is over-indented
+  "D406",  # Section name should end with a newline
+  "D407",  # Missing dashed underline after section
+  "D408",  # Section underline should be in the line following the section's name
+  "D409",  # Section underline should match the length of its name
+  "ERA001",  # Found commented-out code  # NOTE (kyle): incorrectly detects cspell
+  "FIX002",  # Line contains TODO
+  "TD003",  # Missing issue link on the line following this TODO
+  "TID252",  # Relative imports from parent modules are banned
+]
+select = ["ALL"]
+
+[tool.ruff.lint.extend-per-file-ignores]  # https://docs.astral.sh/ruff/settings/#lintextend-per-file-ignores
+"*.py" = [
+  "PYI024",  # Use `typing.NamedTuple` instead of `collections.namedtuple` - should only apply to pyi
+]
+
+[tool.ruff.lint.flake8-type-checking]  # https://docs.astral.sh/ruff/settings/#lint_flake8-type-checking_runtime-evaluated-base-classes
+runtime-evaluated-base-classes = [
+  "pydantic.BaseModel",
+  "pydantic.BeforeValidator",
+]
+
+[tool.ruff.lint.pydocstyle]  # https://docs.astral.sh/ruff/settings/#lintpydocstyle
+convention = "google"
+
+[tool.ruff.lint.pylint]  # https://docs.astral.sh/ruff/settings/#lintpylint
+allow-magic-value-types = ["bytes", "int", "str"]
+max-args = 15
+max-returns = 10
 
 [tool.tomlsort]
 all = true

@@ -1,3 +1,20 @@
 {
-    "cSpell.enabled": true
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports": "always"
+        },
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.detectIndentation": false,
+        "editor.formatOnSave": true,
+        "editor.insertSpaces": true,
+        "editor.rulers": [
+            81,
+            88,
+            100
+        ],
+        "editor.tabSize": 4
+    },
+    "cSpell.enabled": true,
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/"
 }

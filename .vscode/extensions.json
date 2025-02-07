@@ -1,6 +1,10 @@
 {
     "recommendations": [
+        "DavidAnson.vscode-markdownlint",
+        "charliermarsh.ruff",
         "editorconfig.editorconfig",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
         "redhat.vscode-yaml",
         "streetsidesoftware.code-spell-checker",
         "tamasfe.even-better-toml"

@@ -230,6 +230,7 @@ class Installer:
         *,
         allow_prereleases: bool = False,
         force: bool = False,
+        global_install: bool = False,
         version: str | None = None,
     ) -> None:
         """Instantiate class.
@@ -239,12 +240,14 @@ class Installer:
                 when a version is not explicitly provided.
             force: Always perform the install, even if the requested version is
                 detected as the currently installed version.
+            global_install: Install globally for all users.
             version: Version to install from GitHub releases.
 
         """
         self._version = version
         self._allow_prereleases = allow_prereleases
         self._force = force
+        self.global_install = global_install
 
     @property
     def allows_prereleases(self) -> bool:
@@ -254,7 +257,7 @@ class Installer:
     @cached_property
     def bin_dir(self) -> Path:
         """User's bin directory."""
-        rv = Path.home() / ".local/bin"
+        rv = Path("/usr/local/bin") if self.global_install else Path.home() / ".local/bin"
         rv.mkdir(exist_ok=True, parents=True)
         return rv
 
@@ -270,7 +273,7 @@ class Installer:
     @cached_property
     def lib_dir(self) -> Path:
         """User's lib directory."""
-        rv = Path.home() / ".local/lib"
+        rv = Path("/usr/local/lib") if self.global_install else Path.home() / ".local/lib"
         rv.mkdir(exist_ok=True, parents=True)
         return rv
 
@@ -279,9 +282,7 @@ class Installer:
         """List of available releases."""
         metadata = self._get(f"{self.API_URL}/releases")
 
-        def _compare_versions(
-            x: dict[str, Any], y: dict[str, Any]
-        ) -> Literal[-1, 0, 1]:
+        def _compare_versions(x: dict[str, Any], y: dict[str, Any]) -> Literal[-1, 0, 1]:
             mx = self.VERSION_REGEX.match(x["tag_name"])
             my = self.VERSION_REGEX.match(y["tag_name"])
 
@@ -366,14 +367,10 @@ class Installer:
             )
         )
 
-    def download_release_artifact(
-        self, artifact: ReleaseArtifact, tmp_dir: Path
-    ) -> Path:
+    def download_release_artifact(self, artifact: ReleaseArtifact, tmp_dir: Path) -> Path:
         """Download a release artifact."""
         self.write_stdout(
-            "Downloading from {}...".format(
-                colorize("info", artifact["browser_download_url"])
-            )
+            "Downloading from {}...".format(colorize("info", artifact["browser_download_url"]))
         )
         out_file = tmp_dir / artifact["name"]
         urlretrieve(artifact["browser_download_url"], out_file)  # noqa: S310
@@ -386,9 +383,7 @@ class Installer:
         release = self._get(f"{self.API_URL}/releases/tags/v{version.lstrip('v')}")
         asset: ReleaseArtifact | None = None
         mime_type = (
-            "application/zip"
-            if artifact_type == "zip"
-            else f"application/x-{artifact_type}"
+            "application/zip" if artifact_type == "zip" else f"application/x-{artifact_type}"
         )
         for i in release["assets"]:
             if i["content_type"] == mime_type:
@@ -436,7 +431,7 @@ class Installer:
             and not self._force
         ):
             self.write_stdout(
-                f'The latest version ({colorize("b", release["tag_name"])}) is already installed'
+                f"The latest version ({colorize('b', release['tag_name'])}) is already installed"
             )
 
             return None, self.current_version
@@ -455,18 +450,14 @@ class Installer:
             return 0
 
         self.write_stdout(
-            "Installing {} ({})".format(
-                colorize("info", "oi"), colorize("info", version)
-            )
+            "Installing {} ({})".format(colorize("info", "oi"), colorize("info", version))
         )
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             extracted = (
                 ArchiveExtractor(
                     self.download_release_artifact(
-                        self.find_oi_release_artifact(
-                            artifact_type=artifact_type, version=version
-                        ),
+                        self.find_oi_release_artifact(artifact_type=artifact_type, version=version),
                         Path(tmp_dir),
                     )
                 ).extract()
@@ -489,9 +480,7 @@ class Installer:
         """Uninstall oi."""
         lib_dir = self.lib_dir / "oi"
         if not lib_dir.exists():
-            self.write_stdout(
-                "{} is not currently installed.".format(colorize("info", "oi"))
-            )
+            self.write_stdout("{} is not currently installed.".format(colorize("info", "oi")))
             return 1
 
         if self.current_version:
@@ -556,6 +545,14 @@ def main() -> int:
         help="Install on top of existing version.",
     )
     parser.add_argument(
+        "-g",
+        "--global",
+        action="store_true",
+        default=False,
+        dest="global_install",
+        help="Install globally for all users. NOTE: Should be run with elevated privileges (e.g. 'sudo').",
+    )
+    parser.add_argument(
         "-p",
         "--allow-prereleases",
         action="store_true",
@@ -576,7 +573,10 @@ def main() -> int:
     args = parser.parse_args()
 
     installer = Installer(
-        version=args.version, allow_prereleases=args.allow_prereleases, force=args.force
+        allow_prereleases=args.allow_prereleases,
+        force=args.force,
+        global_install=args.global_install,
+        version=args.version,
     )
 
     try:
@@ -586,9 +586,7 @@ def main() -> int:
     except Exception as err:  # noqa: BLE001
         import traceback
 
-        installer.write_stdout(
-            colorize("error", "".join(traceback.format_exception(err)))
-        )
+        installer.write_stdout(colorize("error", "".join(traceback.format_exception(err))))
         installer.write_stdout(colorize("error", "Installation failed!"))
         return 1
 

@@ -31,6 +31,14 @@ To install a pre-release version of OI, the `--allow-prereleases` flag can be pr
 curl -sSL https://raw.githubusercontent.com/finleyfamily/oi/refs/heads/master/install.py | python3 - --allow-prereleases
 ```
 
+To install globally for all users, the `--global` option can be passed to the script.
+This will install OI to `/usr/local/` rather than `$HOME/.local`.
+
+```console
+curl -sSL https://raw.githubusercontent.com/finleyfamily/oi/refs/heads/master/install.py | sudo python3 - --global
+curl -sSL https://raw.githubusercontent.com/finleyfamily/oi/refs/heads/master/install.py | sudo python3 - -g
+```
+
 By default the `.tar.gz` artifact of OI is installed.
 If perferred, the `.zip` artifact can be used by passing `--artifact-type zip` to the script.
 

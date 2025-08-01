@@ -155,7 +155,7 @@ def colorize(style: str, text: Path | str) -> str:
     return f"{STYLES[style]}{text}\033[0m"
 
 
-def string_to_bool(value: bool | str) -> bool:
+def string_to_bool(value: bool | str) -> bool:  # noqa: FBT001
     """Convert string to bool."""
     if isinstance(value, bool):
         return value
@@ -222,7 +222,7 @@ class Installer:
         r"(?:(stable|beta|b|rc|RC|alpha|a|patch|pl|p)((?:[.-]?\d+)*)?)?"
         "([.-]?dev)?"
         ")?"
-        r"(?:\+[^\s]+)?"
+        r"(?:\+[^\s]+)?",
     )
 
     def __init__(
@@ -288,7 +288,7 @@ class Installer:
 
             if not mx or not my:
                 raise NotImplementedError(
-                    f"could not parse a version from {x} and/or {y}"  # noqa: EM102
+                    f"could not parse a version from {x} and/or {y}",  # noqa: EM102
                 )
 
             vx = (*tuple(int(p) for p in mx.groups()[:3]), mx.group(5))
@@ -318,7 +318,7 @@ class Installer:
                 {
                     "Accept": "application/vnd.github+json",
                     "X-GitHub-Api-Version": "2022-11-28",
-                }
+                },
             )
         request = Request(url, headers=headers)  # noqa: S310
 
@@ -334,7 +334,7 @@ class Installer:
                 colorize("info", "oi"),
                 colorize("b", version),
                 colorize("comment", message),
-            )
+            ),
         )
 
     def display_post_message(self, version: str) -> None:
@@ -352,10 +352,10 @@ class Installer:
                 home_bin=colorize("comment", self.bin_dir),
                 package_executable=colorize("b", self.bin_dir / "oi"),
                 configure_message=POST_MESSAGE_CONFIGURE_UNIX.format(
-                    home_bin=colorize("comment", self.bin_dir)
+                    home_bin=colorize("comment", self.bin_dir),
                 ),
                 test_command=colorize("b", "oi --version"),
-            )
+            ),
         )
 
     def display_pre_message(self) -> None:
@@ -364,20 +364,23 @@ class Installer:
             PRE_MESSAGE.format(
                 package=colorize("info", "oi"),
                 home_bin=colorize("comment", self.bin_dir),
-            )
+            ),
         )
 
     def download_release_artifact(self, artifact: ReleaseArtifact, tmp_dir: Path) -> Path:
         """Download a release artifact."""
         self.write_stdout(
-            "Downloading from {}...".format(colorize("info", artifact["browser_download_url"]))
+            "Downloading from {}...".format(colorize("info", artifact["browser_download_url"])),
         )
         out_file = tmp_dir / artifact["name"]
         urlretrieve(artifact["browser_download_url"], out_file)  # noqa: S310
         return out_file
 
     def find_oi_release_artifact(
-        self, *, artifact_type: Literal["zip", "gtar"] = "gtar", version: str
+        self,
+        *,
+        artifact_type: Literal["zip", "gtar"] = "gtar",
+        version: str,
     ) -> ReleaseArtifact:
         """Find oi artifact to be downloaded."""
         release = self._get(f"{self.API_URL}/releases/tags/v{version.lstrip('v')}")
@@ -431,7 +434,7 @@ class Installer:
             and not self._force
         ):
             self.write_stdout(
-                f"The latest version ({colorize('b', release['tag_name'])}) is already installed"
+                f"The latest version ({colorize('b', release['tag_name'])}) is already installed",
             )
 
             return None, self.current_version
@@ -450,7 +453,7 @@ class Installer:
             return 0
 
         self.write_stdout(
-            "Installing {} ({})".format(colorize("info", "oi"), colorize("info", version))
+            "Installing {} ({})".format(colorize("info", "oi"), colorize("info", version)),
         )
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -459,7 +462,7 @@ class Installer:
                     self.download_release_artifact(
                         self.find_oi_release_artifact(artifact_type=artifact_type, version=version),
                         Path(tmp_dir),
-                    )
+                    ),
                 ).extract()
                 / "oi"
             )
@@ -491,7 +494,7 @@ class Installer:
                         "b",
                         ".".join(self.current_version[:3]) + self.current_version[4],
                     ),
-                )
+                ),
             )
         else:
             self.write_stdout("Removing {}".format(colorize("info", "oi")))
@@ -568,7 +571,9 @@ def main() -> int:
         help="Uninstall oi.",
     )
     parser.add_argument(
-        "--version", help="Explicitly provide the version to install.", dest="version"
+        "--version",
+        help="Explicitly provide the version to install.",
+        dest="version",
     )
     args = parser.parse_args()
 
@@ -584,7 +589,7 @@ def main() -> int:
             return installer.uninstall()
         return installer.install(args.artifact_type)
     except Exception as err:  # noqa: BLE001
-        import traceback
+        import traceback  # noqa: PLC0415
 
         installer.write_stdout(colorize("error", "".join(traceback.format_exception(err))))
         installer.write_stdout(colorize("error", "Installation failed!"))

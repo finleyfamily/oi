@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Check out code from GitHub  # needed to use GitHub CLI
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: ⤵️ Download distribution artifact
         uses: actions/download-artifact@v5
         with:

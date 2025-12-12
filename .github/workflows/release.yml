@@ -20,7 +20,7 @@ jobs:
       - name: ⤵️ Check out code from GitHub  # needed to use GitHub CLI
         uses: actions/checkout@v6
       - name: ⤵️ Download distribution artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: dist
           path: dist

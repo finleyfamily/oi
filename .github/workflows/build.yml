@@ -24,7 +24,7 @@ jobs:
           source ./src/version.sh
           ./build.sh ${VERSION:-"${OI_VERSION}-dev+${GITHUB_SHA}"}
       - name: ⤴️ Upload distribution artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: dist
           path: dist

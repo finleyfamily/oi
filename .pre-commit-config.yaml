@@ -6,7 +6,7 @@ exclude: |
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-json
       - id: check-merge-conflict
@@ -35,11 +35,11 @@ repos:
           )$
       - id: trailing-whitespace
   - repo: https://github.com/pappasam/toml-sort
-    rev: v0.24.2
+    rev: v0.24.3
     hooks:
       - id: toml-sort-fix
   - repo: https://github.com/ITProKyle/pre-commit-hook-yamlfmt
-    rev: v0.3.2
+    rev: v0.4.0
     hooks:
       - id: yamlfmt
         args: [--mapping, '2', --offset, '2', --sequence, '4']
@@ -50,7 +50,7 @@ repos:
             \.readthedocs.yml
           )$
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.22
+    rev: 1.0.0
     hooks:
       - id: mdformat
         additional_dependencies:
@@ -58,7 +58,7 @@ repos:
           - mdformat-gfm
           - mdformat-toc
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.45.0
+    rev: v0.47.0
     hooks:
       - id: markdownlint
         exclude: |
